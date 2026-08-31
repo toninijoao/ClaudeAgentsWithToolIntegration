@@ -1,0 +1,23 @@
+{
+  "id": "msg_01LioNGfNM9nEiE1peb9ixAu",
+  "content": [
+    {
+      "text": "I'll calculate 15 + 27 for you using the sum function.",
+      "type": "text"
+    },
+    {
+      "id": "toolu_01ErJzJmxjYisApSybjcTcs4",
+      "input": {
+        "a": 15,
+        "b": 27
+      },
+      "name": "sum_numbers",
+      "type": "tool_use"
+    }
+  ],
+  "model": "claude-sonnet-4-6",
+  "role": "assistant",
+  "stop_reason": "tool_use",
+  "type": "message",
+  "usage": {...}
+}
