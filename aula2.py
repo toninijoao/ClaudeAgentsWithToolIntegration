@@ -19,7 +19,7 @@ response = client.messages.create(
     max_tokens=2000,
     messages=messages,
     system_prompt=system_prompt,
-    tools=tools_schemas
+    tools=tool_schemas
 )
 
 print(json.dumps(response.model_dump(), indent=2))
