@@ -46,3 +46,47 @@ class Agent:
             request_args["tools"] = self.tool_schemas
 
             return request_args
+
+def call_tool(self, tool_use):
+    tool_name = tool_use.name
+    tool_input = tool_use.input or {}
+    tool_use_id = tool_use.id
+
+    print(f"Tool called: {tool_name}({tool_input})")
+
+    try:
+        result = str(self.tools[tool_name](**tool_input))
+    except KeyError:
+        result = f"Error: Tool {tool_name} not found"
+    except Exception as e:
+        result = f"Error: {str(e)}"
+
+    return {
+        "type": "tool_result",
+        "tool_use_id": tool_use_id,
+        "content": result
+    }
+
+def run(self, input_messages):
+    messages = input_messages.copy()
+    turn = 0
+    while turn < self.max_turns:
+        turn += 1
+        response = self.client.messages.create(**self._build_request_args(messages))
+        messages.append({"role": "assistant", "content": response.content})
+
+        if response.stop_reason == "tool_use":
+            tool_results = []
+            for content_item in response.content:
+                if content_item.type == "tool_use":
+                    tool_result = self.call_tool(content_item)
+                    tool_results.append(tool_result)
+            messages.append({
+                "role": "user",
+                "content": tool_results
+            })
+        else:
+            response_text = self._extract_text(response.content)
+            return messages, response_text
+
+    raise Exception("Max turns reached")
